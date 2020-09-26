@@ -7,29 +7,38 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet weak var tableView: UITableView!
+    //Instantiates an array of dictionaries
+    var movies = [[String:Any]]()
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieCell
         
         let movie = movies[indexPath.row]
         //syntax to access a value in a dict
         let title  = movie["title"] as! String
+        let synopsis = movie["overview"] as! String
         
         //Swift optionals
-        cell.textLabel!.text = title
+        cell.titleLabel.text = title
+        cell.synopsisLabel.text = synopsis
+        
+        let baseUrl = "https://image.tmdb.org/t/p/w185"
+        let posterPath = movie["poster_path"] as! String
+        let posterUrl = URL(string: baseUrl + posterPath)
+        //Alamofire in charge of downloading and setting the image
+        cell.posterView.af_setImage(withURL: posterUrl!)
         
         return cell
     }
-    
-    
-    @IBOutlet weak var tableView: UITableView!
-    //Instantiates an array of dictionaries
-    var movies = [[String:Any]]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
