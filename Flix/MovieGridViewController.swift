@@ -20,7 +20,16 @@ class MovieGridViewController: UIViewController, UICollectionViewDataSource, UIC
         
         collectionView.delegate = self
         collectionView.dataSource = self
-
+        
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 10
+        
+        let width = (view.frame.size.width - layout.minimumInteritemSpacing) / 2
+        layout.itemSize = CGSize(width: width, height: width / 0.675)
+        
+        //fetch movies similar to Wonderwoman
         let url = URL(string: "https://api.themoviedb.org/3/movie/297762/similar?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
 
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
@@ -49,14 +58,16 @@ class MovieGridViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieGridCell", for: indexPath) as! MovieGridCell
-        
+        //get movie item from the dictionary
         let movie = movies[indexPath.item]
            
+        //set image url based on poster_path parameter in movie object
         let baseUrl = "https://image.tmdb.org/t/p/w185"
         let posterPath = movie["poster_path"] as! String
         let posterUrl = URL(string: baseUrl + posterPath)
         //Alamofire in charge of downloading and setting the image
         cell.posterView.af.setImage(withURL: posterUrl!)
+        print(posterUrl)
         
         return cell
     }
