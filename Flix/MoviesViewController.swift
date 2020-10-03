@@ -29,6 +29,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         //Swift optionals
         cell.titleLabel.text = title
+        
         cell.synopsisLabel.text = synopsis
         
         let baseUrl = "https://image.tmdb.org/t/p/w185"
